@@ -68,21 +68,23 @@ class Reporter extends Base {
 
     const message = {
       username: this.options.username,
-      channel: this.options.channel
+      text: '',
+      channel: this.options.channel,
+      attachments: []
     }
 
     if (failed) {
       debug('Reporting failure')
 
-      message.text = `FAILED: ${this.options.testTitle}`
+      message.text = `Failed: ${this.options.testTitle}`
       message.icon_emoji = this.options.failEmoji || ':boom:'
-      message.attachments = []
 
       this.failed.forEach(f => {
         message.attachments.push({
           attachment_type: '',
           text: `Failed: ${f.suite} > ${f.title}`,
           fallback: `Failed: ${f.suite} > ${f.title}\n${f.error}`,
+          color: '#e4000a',
           fields: [
             {
               title: '' + f.error,
@@ -93,14 +95,22 @@ class Reporter extends Base {
       })
     } else {
       debug('Reporting success')
-
-      message.text = `PASSED: ${this.options.testTitle}`
       message.icon_emoji = this.options.passEmoji || ':ok_hand:'
+
+      let smallText = '';
+
+      if (this.options.logsUrl) {
+       smallText = ` (<${this.options.logsUrl}|View logs>)`
+      }
+
+      message.attachments.push({
+        attachment_type: '',
+        text: `Success: ${this.options.testTitle}${smallText}`,
+        color: '#00ae4d'
+      });
+
     }
 
-    if (this.options.logsUrl) {
-      message.text += ` (<${this.options.logsUrl}|View logs>)`
-    }
 
     debug('Reporting', message)
 

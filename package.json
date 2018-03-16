@@ -2,7 +2,7 @@
   "name": "mocha-ci-slack-reporter",
   "version": "1.0.1",
   "description": "Slack reporter for Mocha when running in CI environments",
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "scripts": {
     "prepublish": "npm run build",
     "build": "babel -d lib src && npm test",
